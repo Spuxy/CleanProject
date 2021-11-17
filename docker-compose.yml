@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+ api:
+    build:
+      context: ./api
+      target: dev
+    environment:
+      ADDR_PORT: 4000
+      POSTGRES_HOST: db
+    volumes:
+      - ./api:/api
+    networks:
+      - postgres-net
+      - traefik-public
+    command: CompileDaemon --build="go build -o main ./cmd/api" --command=./main
+
+networks:
+  postgres-net:
+  traefik-public:
