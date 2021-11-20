@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Spuxy/CleanArchitecture/api/pkg/database"
-	"github.com/Spuxy/CleanArchitecture/api/pkg/logger"
+	"github.com/Spuxy/CleanArchitecture/pkg/database"
+	"github.com/Spuxy/CleanArchitecture/pkg/logger"
 )
 
 const port int = 9999
@@ -16,13 +16,18 @@ func Serve() {
 
 	addr := os.Getenv("ADDR_PORT")
 	database, err := database.NewPostgres()
+
 	if err != nil {
 		logger.LogError(err.Error())
+		fmt.Println(err)
 	}
-	defer database.Db.Close()
+
 	handler := NewHandler(logger, database)
-	router := NewRouter(handler)
-	router.Routes()
-	http.ListenAndServe(fmt.Sprintf(":%s", addr), nil)
+
+	http.HandleFunc("/", handler.Welcome)
+	http.HandleFunc("/users", handler.Users)
+
+	err = http.ListenAndServe(fmt.Sprintf(":%s", addr), nil)
+	fmt.Println(err)
 
 }

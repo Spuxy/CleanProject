@@ -15,5 +15,5 @@ func NewRouter(h *Handler) *Router {
 // TODO: Implementace middlewaru
 func (r *Router) Routes() {
 	mux := mux.NewRouter()
-	mux.HandleFunc("/", r.handler.Welcome)
+	mux.HandleFunc("/test", r.handler.Welcome)
 }

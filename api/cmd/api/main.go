@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Spuxy/CleanArchitecture/api/internal/api"
+	"github.com/Spuxy/CleanArchitecture/internal/api"
 )
 
 func main() {

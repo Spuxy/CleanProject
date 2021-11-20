@@ -3,9 +3,12 @@ package database
 import (
 	"fmt"
 
-	"github.com/Spuxy/CleanArchitecture/api/pkg/secrets"
-	"github.com/jinzhu/gorm"
+	"github.com/Spuxy/CleanArchitecture/pkg/secrets"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
+
+const secret_path string = "/api/pkg/secrets/secrets"
 
 type Postgres struct {
 	Db *gorm.DB
@@ -20,12 +23,12 @@ func NewPostgres() (*Postgres, error) {
 }
 
 func Connect() (*gorm.DB, error) {
-	ds, _ := secrets.NewDotSecret("/home/god/Programming/Go/CleanProject/api/pkg/secrets/secrets/")
-	dbuser, _ := ds.Get("user")
-	dbpass, _ := ds.Get("pass")
-	dbhost, _ := ds.Get("host")
-	dbname, _ := ds.Get("name")
+	ds, _ := secrets.NewDotSecret(secret_path)
+	dbuser, _ := ds.Get("postgres_user")
+	dbpass, _ := ds.Get("postgres_passwd")
+	dbhost, _ := ds.Get("postgres_db")
+	dbname, _ := ds.Get("postgres_name")
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:5432/%s?sslmode=disable", dbuser, dbpass, dbhost, dbname)
-	db, err := gorm.Open("postgres", dbURL)
+	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	return db, err
 }
